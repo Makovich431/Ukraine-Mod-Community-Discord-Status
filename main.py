@@ -17,9 +17,10 @@ def connect_rpc():
     try:
         RPC.connect()
         print("Успішне підключення до Discord RPC")
+        return True
     except Exception as e:
         print(f"Не вдалося підключитися до Discord RPC: {e}")
-        sys.exit(1)
+        return False
 
 
 # Функція для отримання числа гравців на сервері
@@ -64,8 +65,7 @@ def update_presence(total_players):
 
 def main():
     print("Rich Presence запускається...")
-    connect_rpc()
-
+    if connect_rpc() is False: return
     try:
         while True:
             start_time = time.time()
@@ -85,7 +85,7 @@ def main():
     except KeyboardInterrupt:
         print("Вихід...")
         RPC.close()
-        sys.exit(0)
+        return
 
 
 if __name__ == "__main__":
