@@ -1,7 +1,6 @@
 import requests
 from pypresence import Presence
-import time
-import sys
+import time, sys
 
 client_id = 'Client_ID Бота'
 
