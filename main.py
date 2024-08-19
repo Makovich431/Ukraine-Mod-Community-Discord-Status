@@ -10,7 +10,6 @@ api_key = 'Замініть на ваш ключ API BattleMetrics'
 
 RPC = Presence(client_id)
 
-
 # Функція для підключення до Discord
 def connect_rpc():
     try:
@@ -20,7 +19,6 @@ def connect_rpc():
     except Exception as e:
         print(f"Не вдалося підключитися до Discord RPC: {e}")
         return False
-
 
 # Функція для отримання числа гравців на сервері
 def get_server_population(server_id):
@@ -37,13 +35,13 @@ def get_server_population(server_id):
         return players
     except requests.exceptions.RequestException as e:
         print(f"Не вдалося отримати дані з API BattleMetrics для сервера {server_id}: {e}")
-        return None
+        return 0
 
 
 # Функція для оновлення статусу в Discord
 def update_presence(total_players):
     print(f"Оновлення присутності з {total_players} гравцями онлайн")
-    if total_players is not None:
+    if total_players:
         try:
             RPC.update(
                 state="Ukraine Mod Community",
@@ -68,19 +66,13 @@ def main():
     try:
         while True:
             start_time = time.time()
-
             total_players = 0
             for server_id in server_ids:
-                players_online = get_server_population(server_id)
-                if players_online is not None:
-                    total_players += players_online
-
+                total_players += get_server_population(server_id)
             update_presence(total_players)
-
             elapsed_time = time.time() - start_time
             sleep_time = max(0, 5 - elapsed_time)
             time.sleep(sleep_time)  # Оновлюємо статус кожні 5 секунд
-
     except KeyboardInterrupt:
         print("Вихід...")
         RPC.close()
